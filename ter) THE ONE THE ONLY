@@ -1,0 +1,32 @@
+* [33m441416a[m[33m ([m[1;32mmaster[m[33m)[m THE ONE THE ONLY
+*   [33mee0f7e9[m[33m ([m[1;31morigin/Ameni[m[33m)[m Merge branch 'master' into Ameni
+[31m|[m[32m\[m  
+[31m|[m * [33m784e513[m 1CRUD
+[31m|[m *   [33mfe735df[m[33m ([m[1;31morigin/Atef[m[33m)[m Merge branch 'Atef' of https://github.com/AyoubRebhi/NatureLink-Back into Atef
+[31m|[m [33m|[m[34m\[m  
+[31m|[m * [34m|[m [33ma06903d[m Update User.java
+[31m|[m [34m|[m [34m|[m * [33m9421af0[m[33m ([m[1;31morigin/Hajer[m[33m)[m fix issue
+[31m|[m [34m|[m [34m|[m * [33m3a1683a[m fix issues
+[31m|[m [34m|[m [34m|[m * [33mbf5e7e2[m fix json ignore
+[31m|[m [34m|[m [34m|[m * [33mebc61fc[m add clothing and food destination crud
+[31m|[m [34m|[m [34m|[m * [33m443ff17[m Premier commit
+[31m|[m [34m|[m[31m_[m[34m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m [34m|[m   
+[31m|[m [34m|[m [34m|[m * [33m0324912[m[33m ([m[1;31morigin/Ayoub[m[33m)[m feat: activity crud
+[31m|[m [34m|[m [34m|[m * [33mda8ca00[m fix: fixing controllers
+[31m|[m [34m|[m [34m|[m [36m|[m * [33mbd504d6[m[33m ([m[1;31morigin/feten[m[33m)[m ALLCRUD
+[31m|[m [34m|[m[31m_[m[34m|[m[31m_[m[36m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m [34m|[m [36m|[m   
+[31m|[m [34m|[m [34m|[m [36m|[m * [33m80525fe[m[33m ([m[1;31morigin/main[m[33m)[m TRANSPORT TABLE + USER TABLE
+[31m|[m [34m|[m [34m|[m [36m|[m[36m/[m[34m|[m 
+[31m|[m [34m|[m [34m|[m [36m|[m[34m/[m  
+[31m|[m [34m|[m [34m|[m[34m/[m[36m|[m   
+[31m|[m [34m|[m * [36m|[m [33m65d918d[m Merge branch 'main' into Atef
+[31m|[m [34m|[m[34m/[m[36m|[m [36m|[m 
+[31m|[m [34m|[m [36m|[m[36m/[m  
+[31m|[m [34m|[m * [33m3bccf54[m feat: structure of the project + table transport
+[31m|[m [34m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m   
+[31m|[m * [33m7da1e52[m CRUD USER
+[31m|[m[31m/[m  
+* [33m90c46b7[m[33m ([m[1;36mHEAD -> [m[1;32mAziz[m[33m, [m[1;31morigin/Iheb[m[33m, [m[1;31morigin/Aziz[m[33m)[m feat: first commit
