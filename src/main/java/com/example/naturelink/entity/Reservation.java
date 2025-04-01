@@ -34,23 +34,28 @@ public class Reservation {
 
 
     @ManyToOne
+    @JoinColumn(name = "logement_id")
     @Nullable
     private Logement logementId;
 
     @ManyToOne
     @Nullable
+    @JoinColumn(name = "event_id")
     private Evenement eventId;
 
     @ManyToOne
     @Nullable
-    private Restaurant RestaurantId;
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
     @ManyToOne
     @Nullable
+    @JoinColumn(name = "transport_id")
     private Transport transpId;
 
     @ManyToOne
     @Nullable
+    @JoinColumn(name = "activite_id")
     private Activite ActiviteId;
 
 
@@ -129,13 +134,14 @@ public class Reservation {
         eventId = eventId;
     }
 
-    public Restaurant getRestaurantId() {
-        return RestaurantId;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantId(Restaurant restaurantId) {
-        RestaurantId = restaurantId;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
+
 
     public Transport getTranspId() { return transpId; }
     public void setTranspId(Transport transpId) { this.transpId = transpId; }

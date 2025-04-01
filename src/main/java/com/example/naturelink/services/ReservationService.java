@@ -85,7 +85,7 @@ public class ReservationService implements IReservationService {
         } else if (typeres == TypeReservation.EVENT) {
             reservation.setEventId(reservation.getEventId());
         } else if (typeres == TypeReservation.RESTAURANT) {
-            reservation.setRestaurantId(reservation.getRestaurantId());
+            reservation.setRestaurant(reservation.getRestaurant());
         } else if (typeres == TypeReservation.TRANSPORT) {
             reservation.setTranspId(reservation.getTranspId());
         }
@@ -106,7 +106,7 @@ public class ReservationService implements IReservationService {
             } else if (typeres == TypeReservation.EVENT) {
                 reservation.setEventId(reservation.getEventId());
             } else if (typeres == TypeReservation.RESTAURANT) {
-                reservation.setRestaurantId(reservation.getRestaurantId());
+                reservation.setRestaurant(reservation.getRestaurant());
             } else if (typeres == TypeReservation.TRANSPORT) {
                 reservation.setTranspId(reservation.getTranspId());
             }
