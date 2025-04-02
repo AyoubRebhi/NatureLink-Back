@@ -56,7 +56,7 @@ public class Reservation {
     @ManyToOne
     @Nullable
     @JoinColumn(name = "activite_id")
-    private Activite ActiviteId;
+    private Activity activityId;
 
 
 
@@ -162,11 +162,11 @@ public class Reservation {
         }
         this.client.setId(userId);
     }
-    public Activite getActiviteId() {
-        return ActiviteId;
+    public Activity getActivityId() {
+        return activityId;
     }
 
-    public void setActiviteId(Activite activiteId) {
-        ActiviteId = activiteId;
+    public void setActivityId(Activity activityId) {
+        this.activityId = activityId;
     }
 }

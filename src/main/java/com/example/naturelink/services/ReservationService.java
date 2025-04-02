@@ -81,7 +81,7 @@ public class ReservationService implements IReservationService {
         if (typeres == TypeReservation.LOGEMENT) {
             reservation.setLogementId(reservation.getLogementId());
         } else if (typeres == TypeReservation.ACTIVITE) {
-            reservation.setActiviteId(reservation.getActiviteId());
+            reservation.setActivityId(reservation.getActivityId());
         } else if (typeres == TypeReservation.EVENT) {
             reservation.setEventId(reservation.getEventId());
         } else if (typeres == TypeReservation.RESTAURANT) {
@@ -102,7 +102,7 @@ public class ReservationService implements IReservationService {
             if (typeres == TypeReservation.LOGEMENT) {
                 reservation.setLogementId(reservation.getLogementId());
             } else if (typeres == TypeReservation.ACTIVITE) {
-                reservation.setActiviteId(reservation.getActiviteId());
+                reservation.setActivityId(reservation.getActivityId());
             } else if (typeres == TypeReservation.EVENT) {
                 reservation.setEventId(reservation.getEventId());
             } else if (typeres == TypeReservation.RESTAURANT) {

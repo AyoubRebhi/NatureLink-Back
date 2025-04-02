@@ -1,8 +1,8 @@
 package com.example.naturelink.repository;
 
-import com.example.naturelink.entity.Activite;
+import com.example.naturelink.entity.Transport;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ActiviteRepository extends JpaRepository<Activite, Integer> {
+public interface ITransportRepository extends JpaRepository<Transport, Integer> {
     // Define custom query methods if needed
 }

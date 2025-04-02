@@ -1,18 +1,21 @@
+
 package com.example.naturelink.services;
 
 import com.example.naturelink.entity.Transport;
-import com.example.naturelink.repository.TransportRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.naturelink.repository.ITransportRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TransportService implements ITransportService {
+public class TransportService implements ITransportService{
+    private final ITransportRepository transportRepository;
 
-    @Autowired
-    private TransportRepository transportRepository;
+    public TransportService(ITransportRepository transportRepository) {
+        this.transportRepository = transportRepository;
+    }
+
 
     @Override
     public List<Transport> getAllTransports() {
@@ -30,12 +33,14 @@ public class TransportService implements ITransportService {
     }
 
     @Override
-    public Transport updateTransport(Integer id, Transport transport) {
-        if (transportRepository.existsById(id)) {
-            transport.setId(id);
+    public Transport updateTransport(Integer id, Transport transportDetails) {
+        return transportRepository.findById(id).map(transport -> {
+            transport.setType(transportDetails.getType());
+            transport.setCapacity(transportDetails.getCapacity());
+            transport.setPricePerKm(transportDetails.getPricePerKm());
+            transport.setAvailable(transportDetails.getAvailable());
             return transportRepository.save(transport);
-        }
-        throw new RuntimeException("Transport not found");
+        }).orElseThrow(() -> new RuntimeException("Transport not found"));
     }
 
     @Override

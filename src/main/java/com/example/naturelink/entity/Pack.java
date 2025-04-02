@@ -1,6 +1,5 @@
 package com.example.naturelink.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,13 +27,14 @@ public class Pack {
     private User user;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Pack_Logement",
             joinColumns = @JoinColumn(name = "pack_id"),
             inverseJoinColumns = @JoinColumn(name = "logement_id")
     )
     private List<Logement> logements;
+
 
     @ManyToMany
     @JoinTable(
@@ -50,7 +50,7 @@ public class Pack {
             joinColumns = @JoinColumn(name = "pack_id"),
             inverseJoinColumns = @JoinColumn(name = "activite_id")
     )
-    private List<Activite> activites;
+    private List<Activity> activities;
 
     @ManyToMany
     @JoinTable(
@@ -128,12 +128,12 @@ public class Pack {
         this.transports = transports;
     }
 
-    public List<Activite> getActivites() {
-        return activites;
+    public List<Activity> getActivities() {
+        return activities;
     }
 
-    public void setActivites(List<Activite> activites) {
-        this.activites = activites;
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
     }
 
     public List<Restaurant> getRestaurants() {

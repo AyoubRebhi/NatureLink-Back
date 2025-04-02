@@ -1,12 +1,15 @@
 package com.example.naturelink.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+//@Data
 public class Transport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,49 +19,41 @@ public class Transport {
     private Integer capacity;
     private Float pricePerKm;
     private Boolean available;
-
-    // Getter and Setter for 'id'
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    // Getter and Setter for 'type'
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    // Getter and Setter for 'capacity'
     public Integer getCapacity() {
         return capacity;
+    }
+
+    public Float getPricePerKm() {
+        return pricePerKm;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    // Getter and Setter for 'pricePerKm'
-    public Float getPricePerKm() {
-        return pricePerKm;
-    }
-
     public void setPricePerKm(Float pricePerKm) {
         this.pricePerKm = pricePerKm;
     }
 
-    // Getter and Setter for 'available'
-    public Boolean getAvailable() {
-        return available;
-    }
-
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
     }
 }

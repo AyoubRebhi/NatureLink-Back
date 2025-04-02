@@ -1,7 +1,8 @@
 package com.example.naturelink.services;
 
+
 import com.example.naturelink.entity.Logement;
-import com.example.naturelink.repository.LogementRepository;
+import com.example.naturelink.repository.ILogementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,34 +13,44 @@ import java.util.Optional;
 public class LogementService implements ILogementService {
 
     @Autowired
-    private LogementRepository logementRepository;
+    private ILogementRepository logementRepository;
 
-    @Override
+    // Get all logements
     public List<Logement> getAllLogements() {
         return logementRepository.findAll();
     }
 
-    @Override
-    public Optional<Logement> getLogementById(Long id) {
-        return logementRepository.findById(id);
+    // Get logement by ID
+    public Optional<Logement> getLogementById(Integer id) {
+        return logementRepository.findById(Long.valueOf(id));
     }
 
-    @Override
+    // Add a new logement
     public Logement addLogement(Logement logement) {
         return logementRepository.save(logement);
     }
 
-    @Override
-    public Logement updateLogement(Long id, Logement logement) {
-        if (logementRepository.existsById(id)) {
-            logement.setId(id);
-            return logementRepository.save(logement);
-        }
-        throw new RuntimeException("Logement not found");
+    // Update an existing logement
+    public Logement updateLogement(Integer id, Logement logementDetails) {
+        Logement logement = logementRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new RuntimeException("Logement not found with id: " + id));
+
+        logement.setTitre(logementDetails.getTitre());
+        logement.setDescription(logementDetails.getDescription());
+        logement.setLocation(logementDetails.getLocation());
+        logement.setEquipment(logementDetails.getEquipment());
+        logement.setPrice(logementDetails.getPrice());
+        logement.setImage(logementDetails.getImage());
+        logement.setProprietarield(logementDetails.getProprietarield());
+        logement.setPhone(logementDetails.getPhone());
+        logement.setEmail(logementDetails.getEmail());
+        logement.setSocialMedia(logementDetails.getSocialMedia());
+
+        return logementRepository.save(logement);
     }
 
-    @Override
-    public void deleteLogement(Long id) {
-        logementRepository.deleteById(id);
+    // Delete a logement
+    public void deleteLogement(Integer id) {
+        logementRepository.deleteById(Long.valueOf(id));
     }
 }

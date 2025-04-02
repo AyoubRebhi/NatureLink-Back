@@ -1,3 +1,4 @@
+
 package com.example.naturelink.services;
 
 import com.example.naturelink.entity.Logement;
@@ -6,14 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ILogementService {
-
     List<Logement> getAllLogements();
-
-    Optional<Logement> getLogementById(Long id);
-
+    Optional<Logement> getLogementById(Integer id);
     Logement addLogement(Logement logement);
-
-    Logement updateLogement(Long id, Logement logement);
-
-    void deleteLogement(Long id);
+    Logement updateLogement(Integer id, Logement logementDetails);
+    void deleteLogement(Integer id);
 }

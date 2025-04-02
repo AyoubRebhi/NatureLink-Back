@@ -7,13 +7,9 @@ import java.util.Optional;
 
 public interface ITransportService {
 
-    List<Transport> getAllTransports();
-
-    Optional<Transport> getTransportById(Integer id);
-
-    Transport addTransport(Transport transport);
-
-    Transport updateTransport(Integer id, Transport transport);
-
-    void deleteTransport(Integer id);
+    public List<Transport> getAllTransports();
+    public Optional<Transport> getTransportById(Integer id);
+    public Transport addTransport(Transport transport);
+    public Transport updateTransport(Integer id, Transport transportDetails);
+    public void deleteTransport(Integer id);
 }

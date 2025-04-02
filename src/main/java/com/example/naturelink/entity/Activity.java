@@ -1,8 +1,9 @@
+
 package com.example.naturelink.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Activite {
+@Data
+public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String name;
     private String description;
     private Integer providerId;
@@ -23,17 +24,31 @@ public class Activite {
     private float price;
     private Integer maxParticipants;
     private String difficultyLevel;
-
     @ElementCollection
     private List<String> requiredEquipment;
 
-    // Getters & Setters
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Integer providerId) {
+        this.providerId = providerId;
+    }
+
+    public List<String> getRequiredEquipment() {
+        return requiredEquipment;
+    }
+
+    public void setRequiredEquipment(List<String> requiredEquipement) {
+        this.requiredEquipment = requiredEquipement;
     }
 
     public String getName() {
@@ -50,14 +65,6 @@ public class Activite {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getProviderId() {
-        return providerId;
-    }
-
-    public void setProviderId(Integer providerId) {
-        this.providerId = providerId;
     }
 
     public String getLocation() {
@@ -88,23 +95,16 @@ public class Activite {
         return maxParticipants;
     }
 
-    public void setMaxParticipants(Integer maxParticipants) {
-        this.maxParticipants = maxParticipants;
+    public void setMaxParticipants(Integer maxParticipant) {
+        this.maxParticipants = maxParticipant;
     }
 
     public String getDifficultyLevel() {
         return difficultyLevel;
     }
 
-    public void setDifficultyLevel(String difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
+    public void setDifficultyLevel(String difficultLevel) {
+        this.difficultyLevel = difficultLevel;
     }
 
-    public List<String> getRequiredEquipment() {
-        return requiredEquipment;
-    }
-
-    public void setRequiredEquipment(List<String> requiredEquipment) {
-        this.requiredEquipment = requiredEquipment;
-    }
 }
