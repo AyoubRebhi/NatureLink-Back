@@ -3,6 +3,7 @@ package com.example.naturelink.service;
 import com.example.naturelink.entity.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IUserService {
@@ -13,7 +14,7 @@ public interface IUserService {
 
     User addUser(User user);
 
-    User updateUser(Integer id, User user);
+    User updateUser(Integer id, Map<String, Object> updates);
 
     void deleteUser(Integer id);
 }

@@ -9,7 +9,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "users") // Changed table name to avoid reserved keyword conflict
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email"),
+                @UniqueConstraint(columnNames = "username")
+        }) // Changed table name to avoid reserved keyword conflict
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,7 +25,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
 
@@ -40,8 +47,12 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
+        return username;
+    }
+    public String getEmail() {
         return email;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -62,4 +73,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    // Setters
+    public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPassword(String password) { this.password = password; }
+    public void setRole(Role role) { this.role = role; }
 }

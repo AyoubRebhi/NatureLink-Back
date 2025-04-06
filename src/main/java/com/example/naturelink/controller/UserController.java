@@ -5,7 +5,7 @@ import com.example.naturelink.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +16,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
@@ -33,9 +30,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> updates
+    ) {
         try {
-            User updatedUser = userService.updateUser(id, user);
+
+            User updatedUser = userService.updateUser(id, updates);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -46,5 +47,10 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok().body(users);
     }
 }

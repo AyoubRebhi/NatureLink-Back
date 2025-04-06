@@ -5,6 +5,7 @@ import com.example.naturelink.dto.SignInRequest;
 import com.example.naturelink.dto.SignUpRequest;
 import com.example.naturelink.entity.Role;
 import com.example.naturelink.entity.User;
+import com.example.naturelink.exceptions.DuplicateEntityException;
 import com.example.naturelink.repository.UserRepository;
 import com.example.naturelink.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse signUp(SignUpRequest request) {
+
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new DuplicateEntityException("Username already exists");
+        }
+
+        // Check for existing email
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateEntityException("Email already exists");
+        }
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())

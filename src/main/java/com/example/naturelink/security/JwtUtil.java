@@ -1,5 +1,6 @@
 package com.example.naturelink.security;
 
+import com.example.naturelink.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,13 +41,17 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
+        User user = (User) userDetails;
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .claim("roles", userDetails.getAuthorities().stream()
+                .setSubject(user.getEmail())  // Convert numeric ID to string
+                .claim("id", user.getId())
+                .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
+                .claim("roles", user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10h
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
