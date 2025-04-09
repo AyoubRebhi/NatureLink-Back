@@ -58,4 +58,9 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return paymentRepository.findByUserAndStatus(user, Payment.PaymentStatus.PENDING);
     }
+    public List<Payment> getPaymentsByUserId(Integer userId) {
+        // Exemple simple
+        return paymentRepository.findByUserId(userId);
+    }
+
 }

@@ -55,5 +55,9 @@ public class PaymentController {
         paymentService.deletePayment(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Payment>> getPaymentsByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));
+    }
 
 }
