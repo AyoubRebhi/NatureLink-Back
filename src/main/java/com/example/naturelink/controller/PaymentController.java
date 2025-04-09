@@ -29,4 +29,31 @@ public class PaymentController {
                 paymentService.getUserPayments(authentication.getName())
         );
     }
+    @GetMapping("/pending")
+    public ResponseEntity<List<Payment>> getPendingPayments(Authentication authentication) {
+        return ResponseEntity.ok(
+                paymentService.getPendingPayments(authentication.getName())
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> updatePayment(
+            @PathVariable Long id,
+            @RequestBody Payment payment,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(
+                paymentService.updatePayment(id, payment, authentication.getName())
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        paymentService.deletePayment(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
+
 }

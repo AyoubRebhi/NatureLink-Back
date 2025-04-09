@@ -17,4 +17,6 @@ public interface IUserService {
     User updateUser(Integer id, Map<String, Object> updates);
 
     void deleteUser(Integer id);
+    User blockUser(Integer id);
+    User unblockUser(Integer id);
 }

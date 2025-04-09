@@ -29,4 +29,33 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return paymentRepository.findByUser(user);
     }
+    public Payment updatePayment(Long paymentId, Payment updatedPayment, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Payment existing = paymentRepository.findByIdAndUser(paymentId, user)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        existing.setAmount(updatedPayment.getAmount());
+        existing.setPaymentMethod(updatedPayment.getPaymentMethod());
+        existing.setStatus(updatedPayment.getStatus());
+
+        return paymentRepository.save(existing);
+    }
+
+    public void deletePayment(Long paymentId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Payment payment = paymentRepository.findByIdAndUser(paymentId, user)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        paymentRepository.delete(payment);
+    }
+
+    public List<Payment> getPendingPayments(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return paymentRepository.findByUserAndStatus(user, Payment.PaymentStatus.PENDING);
+    }
 }

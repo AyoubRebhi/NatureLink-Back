@@ -68,4 +68,21 @@ public class UserService implements IUserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+    @Override
+    public User blockUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setBlocked(true);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User unblockUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setBlocked(false);
+        return userRepository.save(user);
+    }
 }
