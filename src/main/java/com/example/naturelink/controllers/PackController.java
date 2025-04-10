@@ -1,8 +1,8 @@
 package com.example.naturelink.controllers;
 
+import com.example.naturelink.dto.PackDTO;
 import com.example.naturelink.entity.Pack;
-import com.example.naturelink.services.PackService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.naturelink.services.IPackService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,37 +11,34 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/packs")
+@CrossOrigin(origins = "*") // Optional: for frontend testing
 public class PackController {
 
-    @Autowired
-    private PackService packService;
-
-    @GetMapping
-    public List<Pack> getAllPacks() {
-        return packService.getAllPacks();
+    private final IPackService packService;
+    public PackController(IPackService packService) {
+        this.packService = packService;
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Pack> getPackById(@PathVariable Long id) {
-        Optional<Pack> pack = packService.getPackById(id);
-        return pack.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
+    // ➕ Add a new pack
     @PostMapping
-    public Pack addPack(@RequestBody Pack pack) {
-        return packService.addPack(pack);
+    public ResponseEntity<?> addPack(@RequestBody PackDTO packDTO) {
+        packService.addPack(packDTO);
+        return ResponseEntity.ok().build(); // ✅ correct
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Pack> updatePack(@PathVariable Long id, @RequestBody Pack pack) {
+
+    // ✏️ Update an existing pack
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Pack> updatePack(@PathVariable Long id, @RequestBody PackDTO dto) {
         try {
-            return ResponseEntity.ok(packService.updatePack(id, pack));
+            Pack updatedPack = packService.updatePack(id, dto);
+            return ResponseEntity.ok(updatedPack);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
+    // ❌ Delete a pack by ID
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePack(@PathVariable Long id) {
         try {
             packService.deletePack(id);
@@ -49,5 +46,20 @@ public class PackController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // 📦 Get all packs
+    @GetMapping
+    public ResponseEntity<List<PackDTO>> getAllPacks() {
+        List<PackDTO> packs = packService.getAllPacks();
+        return ResponseEntity.ok(packs); // ✅ No casting needed
+    }
+
+
+    // 🔍 Get pack by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Pack> getPackById(@PathVariable Long id) {
+        Optional<Pack> pack = packService.getPackById(id);
+        return pack.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

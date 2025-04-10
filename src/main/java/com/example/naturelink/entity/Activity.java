@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "activity")  // Specify the correct table name
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

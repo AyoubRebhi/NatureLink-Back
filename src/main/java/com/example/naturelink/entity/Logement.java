@@ -116,4 +116,22 @@ public class Logement {
     public void setSocialMedia(String socialMedia) {
         this.socialMedia = socialMedia;
     }
+
+    @Override
+    public String toString() {
+        return "Logement{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
+                ", equipment=" + equipment +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                ", proprietarield=" + proprietarield +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", socialMedia='" + socialMedia + '\'' +
+                '}';
+    }
+
 }

@@ -23,7 +23,7 @@ public class ActivityService implements IActivityService {
 
     @Override
     public Optional<Activity> getActivityById(Integer id) {
-        return activityRepository.findById(id);
+        return activityRepository.findById(Long.valueOf(id));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ActivityService implements IActivityService {
 
     @Override
     public Activity updateActivity(Integer id, Activity activityDetails) {
-        return activityRepository.findById(id).map(activity -> {
+        return activityRepository.findById(Long.valueOf(id)).map(activity -> {
             activity.setName(activityDetails.getName());
             activity.setDescription(activityDetails.getDescription());
             activity.setProviderId(activityDetails.getProviderId());
@@ -49,6 +49,6 @@ public class ActivityService implements IActivityService {
 
     @Override
     public void deleteActivity(Integer id) {
-        activityRepository.deleteById(id);
+        activityRepository.deleteById(Long.valueOf(id));
     }
 }

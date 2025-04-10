@@ -1,40 +1,45 @@
 package com.example.naturelink.services;
 
+import com.example.naturelink.dto.PackDTO;
 import com.example.naturelink.entity.*;
 import com.example.naturelink.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PackService implements IPackService {
 
-    @Autowired
-    private PackRepository packRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ILogementRepository logementRepository;
-
-    @Autowired
-    private ITransportRepository transportRepository;
-
-    @Autowired
-    private IActivityRepository activityRepository;
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
-
-    @Autowired
-    private EvenementRepository evenementRepository;
+    @Autowired private PackRepository packRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private ILogementRepository logementRepository;
+    @Autowired private ITransportRepository transportRepository;
+    @Autowired private IActivityRepository activityRepository;
+    @Autowired private RestaurantRepository restaurantRepository;
+    @Autowired private EvenementRepository evenementRepository;
 
     @Override
-    public List<Pack> getAllPacks() {
-        return packRepository.findAll();
+    public List<PackDTO> getAllPacks() {
+        List<Pack> packs = packRepository.findAll();
+
+        return packs.stream().map(pack -> {
+            PackDTO dto = new PackDTO();
+            dto.setNom(pack.getNom());
+            dto.setPrix(pack.getPrix());
+            dto.setDescription(pack.getDescription());
+            dto.setId(pack.getId());
+            dto.setUserId(Long.valueOf(pack.getUser() != null ? pack.getUser().getId() : null));
+
+            dto.setLogements(pack.getLogements().stream().map(Logement::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setTransports(pack.getTransports().stream().map(Transport::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setActivities(pack.getActivities().stream().map(Activity::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setEvenements(pack.getEvenements().stream().map(Evenement::getId).map(Long::valueOf).collect(Collectors.toList()));
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -42,116 +47,86 @@ public class PackService implements IPackService {
         return packRepository.findById(id);
     }
 
-
-    @Override
-    public Pack addPack(Pack pack) {
-        // Ensure the user exists
-        if (pack.getUser() != null && pack.getUser().getId() != null) {
-            User user = userRepository.findById(pack.getUser().getId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            pack.setUser(user);
-        } else {
-            throw new RuntimeException("User ID is required to create a Pack");
+    public Pack addPack(PackDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("PackDTO cannot be null");
         }
 
-        // Ensure related entities exist and fetch them
-        fetchAndSetRelatedEntities(pack);
+        Pack pack = new Pack();
+        pack.setNom(dto.getNom());
+        pack.setDescription(dto.getDescription());
+        pack.setPrix(dto.getPrix());
 
-        // Counting the number of non-null relationships
-        int validRelations = countValidRelations(pack);
+        int associatedCount = 0;
 
-        // Ensure the pack has at least two elements
-        if (validRelations < 2) {
-            throw new RuntimeException("Pack must include at least two elements (Logement, Transport, Activity, Restaurant, or Evenement).");
+        // Logements
+        if (dto.getLogements() != null && !dto.getLogements().isEmpty()) {
+            List<Logement> logements = logementRepository.findAllById(dto.getLogements());
+            pack.setLogements(logements);
+            associatedCount++;
         }
 
-        // Save the pack
+        // Restaurants
+        if (dto.getRestaurants() != null && !dto.getRestaurants().isEmpty()) {
+            List<Restaurant> restaurants = restaurantRepository.findAllById(dto.getRestaurants());
+            pack.setRestaurants(restaurants);
+            associatedCount++;
+        }
+
+        // Activities
+        if (dto.getActivities() != null && !dto.getActivities().isEmpty()) {
+            List<Activity> activities = activityRepository.findAllById(dto.getActivities());
+            pack.setActivities(activities);
+            associatedCount++;
+        }
+
+        // Transports
+        if (dto.getTransports() != null && !dto.getTransports().isEmpty()) {
+            List<Transport> transports = transportRepository.findAllById(dto.getTransports());
+            pack.setTransports(transports);
+            associatedCount++;
+        }
+
+        // Evenements
+        if (dto.getEvenements() != null && !dto.getEvenements().isEmpty()) {
+            List<Evenement> evenements = evenementRepository.findAllById(dto.getEvenements());
+            pack.setEvenements(evenements);
+            associatedCount++;
+        }
+
+        // Check: Must have at least 2 types of entities associated
+        if (associatedCount < 2) {
+            throw new IllegalArgumentException("A pack must contain at least two associated elements.");
+        }
+
+        // Static user assignment
+        User user = userRepository.findById(Math.toIntExact(dto.getUserId()))
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+        pack.setUser(user);
+
         return packRepository.save(pack);
     }
 
 
-    // Helper method to fetch related entities
-    private void fetchAndSetRelatedEntities(Pack pack) {
-        // Fetch and set Logements
-        if (pack.getLogements() != null) {
-            for (Logement logement : pack.getLogements()) {
-                logementRepository.findById(Long.valueOf(logement.getId()))
-                        .ifPresent(existingLogement -> logement.setId(existingLogement.getId()));
-            }
-        }
-
-        // Fetch and set Transports
-        if (pack.getTransports() != null) {
-            for (Transport transport : pack.getTransports()) {
-                transportRepository.findById(transport.getId())
-                        .ifPresent(existingTransport -> transport.setId(existingTransport.getId()));
-            }
-        }
-
-        // Fetch and set Activities
-        if (pack.getActivities() != null) {
-            for (Activity activity : pack.getActivities()) {
-                activityRepository.findById(activity.getId())
-                        .ifPresent(existingActivity -> activity.setId(existingActivity.getId()));
-            }
-        }
-
-        // Fetch and set Restaurants
-        if (pack.getRestaurants() != null) {
-            for (Restaurant restaurant : pack.getRestaurants()) {
-                restaurantRepository.findById(restaurant.getId())
-                        .ifPresent(existingRestaurant -> restaurant.setId(existingRestaurant.getId()));
-            }
-        }
-
-        // Fetch and set Evenements
-        if (pack.getEvenements() != null) {
-            for (Evenement evenement : pack.getEvenements()) {
-                evenementRepository.findById(evenement.getId())
-                        .ifPresent(existingEvenement -> evenement.setId(existingEvenement.getId()));
-            }
-        }
-    }
-
-    // Helper method to count valid relations
-    private int countValidRelations(Pack pack) {
-        int validRelations = 0;
-
-        if (pack.getLogements() != null && !pack.getLogements().isEmpty()) {
-            validRelations++;
-        }
-
-        if (pack.getTransports() != null && !pack.getTransports().isEmpty()) {
-            validRelations++;
-        }
-
-        if (pack.getActivities() != null && !pack.getActivities().isEmpty()) {
-            validRelations++;
-        }
-
-        if (pack.getRestaurants() != null && !pack.getRestaurants().isEmpty()) {
-            validRelations++;
-        }
-
-        if (pack.getEvenements() != null && !pack.getEvenements().isEmpty()) {
-            validRelations++;
-        }
-
-        return validRelations;
-    }
-
     @Override
-    public Pack updatePack(Long id, Pack pack) {
-        if (packRepository.existsById(id)) {
-            pack.setId(id);
-            // Handle relations
-            if (pack.getUser() != null) {
-                pack.setUserId(pack.getUser().getId());
-            }
-            return packRepository.save(pack);
-        }
-        throw new RuntimeException("Pack not found");
+    public Pack updatePack(Long id, PackDTO dto) {
+        Pack existingPack = packRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pack not found"));
+
+        existingPack.setNom(dto.getNom());
+        existingPack.setPrix(dto.getPrix());
+        existingPack.setDescription(dto.getDescription());
+
+        // Directly use List<Long>
+        existingPack.setLogements(logementRepository.findAllById(dto.getLogements()));
+        existingPack.setTransports(transportRepository.findAllById(dto.getTransports()));
+        existingPack.setActivities(activityRepository.findAllById(dto.getActivities()));
+        existingPack.setRestaurants(restaurantRepository.findAllById(dto.getRestaurants()));
+        existingPack.setEvenements(evenementRepository.findAllById(dto.getEvenements()));
+
+        return packRepository.save(existingPack);
     }
+
 
     @Override
     public void deletePack(Long id) {

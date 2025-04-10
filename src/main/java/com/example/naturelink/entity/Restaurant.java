@@ -1,6 +1,7 @@
 package com.example.naturelink.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurant")
@@ -27,6 +28,9 @@ public class Restaurant {
 
     @Column(nullable = false)
     private String image;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Menu> menus;
 
     // Getter and Setter for 'id'
     public Long getId() {
@@ -91,12 +95,21 @@ public class Restaurant {
         this.image = image;
     }
 
+    // Getter and Setter for 'menus'
+    public List<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
+    }
+
     // Constructor
     public Restaurant() {
     }
 
     public Restaurant(Long id, String nom, String description, String localisation, String typeCuisine,
-                      String horairesOuverture, String image) {
+                      String horairesOuverture, String image, List<Menu> menus) {
         this.id = id;
         this.nom = nom;
         this.description = description;
@@ -104,5 +117,6 @@ public class Restaurant {
         this.typeCuisine = typeCuisine;
         this.horairesOuverture = horairesOuverture;
         this.image = image;
+        this.menus = menus;
     }
 }

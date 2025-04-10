@@ -30,10 +30,14 @@ public class Reservation {
 
     private String statut; // Statut : "Confirmée", "Annulée", "En attente"
 
+    @Enumerated(EnumType.STRING)
     private TypeReservation typeres;
 
+    private  String username;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "logement_id")
     @Nullable
     private Logement logementId;
@@ -53,7 +57,8 @@ public class Reservation {
     @JoinColumn(name = "transport_id")
     private Transport transpId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL) // Ensure Activity is persisted when saving Reservation
+
     @Nullable
     @JoinColumn(name = "activite_id")
     private Activity activityId;
@@ -123,7 +128,7 @@ public class Reservation {
     }
 
     public void setLogementId(Logement logementId) {
-        logementId = logementId;
+        this.logementId = logementId;
     }
 
     public Evenement getEventId() {
@@ -169,4 +174,13 @@ public class Reservation {
     public void setActivityId(Activity activityId) {
         this.activityId = activityId;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

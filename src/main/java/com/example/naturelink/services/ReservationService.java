@@ -1,13 +1,17 @@
 package com.example.naturelink.services;
 
+import com.example.naturelink.dto.ReservationDTO;
 import com.example.naturelink.entity.Reservation;
-import com.example.naturelink.entity.TypeReservation;
 import com.example.naturelink.repository.ReservationRepository;
+import com.example.naturelink.entity.*;
+import com.example.naturelink.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -15,26 +19,115 @@ public class ReservationService implements IReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @Override
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    @Autowired
+    private ILogementRepository logementRepository;
+
+    @Autowired
+    private EvenementRepository evenementRepository;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private ITransportRepository transportRepository;
+
+    @Autowired
+    private IActivityRepository activityRepository;
+
+    // Method to convert from ReservationDTO to Reservation entity
+    private Reservation convertToEntity(ReservationDTO dto) {
+        Reservation reservation = new Reservation();
+        reservation.setUserId(Math.toIntExact(dto.getUserId()));
+        reservation.setUsername(dto.getUsername());
+        reservation.setDateDebut(dto.getDateDebut());
+        reservation.setDateFin(dto.getDateFin());
+        reservation.setStatut(dto.getStatut());
+        reservation.setId(reservation.getId()); // ✅ Don't forget this
+
+        if (dto.getLogementId() != null) {
+            Logement logement = logementRepository.findById(dto.getLogementId())
+                    .orElseThrow(() -> new RuntimeException("Logement not found"));
+            reservation.setLogementId(logement);
+            reservation.setTyperes(TypeReservation.LOGEMENT);
+        } else if (dto.getEventId() != null) {
+            Evenement event = evenementRepository.findById(dto.getEventId())
+                    .orElseThrow(() -> new RuntimeException("Event not found"));
+            reservation.setEventId(event);
+            reservation.setTyperes(TypeReservation.EVENT);
+        } else if (dto.getRestaurantId() != null) {
+            Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId())
+                    .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+            reservation.setRestaurant(restaurant);
+            reservation.setTyperes(TypeReservation.RESTAURANT);
+        } else if (dto.getTransportId() != null) {
+            Transport transport = transportRepository.findById(Long.valueOf(dto.getTransportId()))
+                    .orElseThrow(() -> new RuntimeException("Transport not found"));
+            reservation.setTranspId(transport);
+            reservation.setTyperes(TypeReservation.TRANSPORT);
+        } else if (dto.getActivityId() != null) {
+            Activity activity = activityRepository.findById(Long.valueOf(dto.getActivityId()))
+                    .orElseThrow(() -> new RuntimeException("Activity not found"));
+            reservation.setActivityId(activity);
+            reservation.setTyperes(TypeReservation.ACTIVITE);
+        } else {
+            throw new RuntimeException("A reservation type must be specified.");
+        }
+
+        return reservation;
+    }
+
+    // Method to convert from Reservation entity to ReservationDTO
+    private ReservationDTO convertToDTO(Reservation reservation) {
+        return new ReservationDTO(
+                reservation.getUser().getId(),
+                reservation.getUsername(),
+                reservation.getDateDebut(),
+                reservation.getDateFin(),
+                reservation.getLogementId() != null ? Long.valueOf(reservation.getLogementId().getId()) : null,
+                reservation.getEventId() != null ? reservation.getEventId().getId() : null,
+                reservation.getRestaurant() != null ? reservation.getRestaurant().getId() : null,
+                reservation.getTranspId() != null ? reservation.getTranspId().getId() : null,
+                reservation.getActivityId() != null ? reservation.getActivityId().getId() : null,
+                reservation.getStatut(),
+                reservation.getId() // ✅ Don't forget this
+
+        );
     }
 
     @Override
-    public Optional<Reservation> getReservationById(Long id) {
-        return reservationRepository.findById(id);
+    public List<ReservationDTO> getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Reservation addReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public Optional<ReservationDTO> getReservationById(Long id) {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+        return reservation.map(this::convertToDTO);
     }
 
     @Override
-    public Reservation updateReservation(Long id, Reservation reservation) {
+    public ReservationDTO addReservation(ReservationDTO reservationDTO) {
+        ReservationDTO dto = null;
+        System.out.println("Logement set during save: " + dto.getLogementId());
+        ReservationDTO reservation1 = null;
+        System.out.println("Logement returned in get: " +
+                (reservation1.getLogementId() != null ? reservation1.getLogementId() : "NULL"));
+
+        Reservation reservation = convertToEntity(reservationDTO);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return convertToDTO(savedReservation);
+    }
+
+    @Override
+    public ReservationDTO updateReservation(Long id, ReservationDTO reservationDTO) {
         if (reservationRepository.existsById(id)) {
+            Reservation reservation = convertToEntity(reservationDTO);
             reservation.setId(id);
-            return reservationRepository.save(reservation);
+            Reservation updatedReservation = reservationRepository.save(reservation);
+            return convertToDTO(updatedReservation);
         }
         throw new RuntimeException("Reservation not found");
     }
@@ -45,78 +138,74 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Reservation> getReservationsByType(TypeReservation typeres) {
-        return reservationRepository.findByTyperes(typeres);
+    public List<ReservationDTO> getReservationsByType(TypeReservation typeres) {
+        List<Reservation> reservations = reservationRepository.findByTyperes(typeres);
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Reservation> getReservationsByTypeAndLogement(TypeReservation typeres) {
-        return reservationRepository.findByTyperesAndLogementIdIsNotNull(typeres);
+    public List<ReservationDTO> getReservationsByTypeAndLogement(TypeReservation typeres) {
+        List<Reservation> reservations = reservationRepository.findByTyperesAndLogementIdIsNotNull(typeres);
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Reservation> getReservationsByTypeAndEvent(TypeReservation typeres) {
-        return reservationRepository.findByTyperesAndEventIdIsNotNull(typeres);
+    public List<ReservationDTO> getReservationsByTypeAndEvent(TypeReservation typeres) {
+        List<Reservation> reservations = reservationRepository.findByTyperesAndEventIdIsNotNull(typeres);
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Reservation> getReservationsByTypeAndRestaurant(TypeReservation typeres) {
-        return reservationRepository.findByTyperesAndRestaurantIdIsNotNull(typeres);
+    public List<ReservationDTO> getReservationsByTypeAndRestaurant(TypeReservation typeres) {
+        List<Reservation> reservations = reservationRepository.findByTyperesAndRestaurantIdIsNotNull(typeres);
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Reservation> getReservationsByTypeAndTransport(TypeReservation typeres) {
-        return reservationRepository.findByTyperesAndTranspIdIsNotNull(typeres);
+    public List<ReservationDTO> getReservationsByTypeAndTransport(TypeReservation typeres) {
+        List<Reservation> reservations = reservationRepository.findByTyperesAndTranspIdIsNotNull(typeres);
+        return reservations.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    // CRUD functions for reservations depending on the type of reservation
-
-    public Optional<Reservation> getReservationByTypeAndId(TypeReservation typeres, Long id) {
-        return reservationRepository.findByTyperesAndId(typeres, id);
+    @Override
+    public Optional<ReservationDTO> getReservationByTypeAndId(TypeReservation typeres, Long id) {
+        Optional<Reservation> reservation = reservationRepository.findByTyperesAndId(typeres, id);
+        return reservation.map(this::convertToDTO);
     }
 
-    public Reservation addReservationByType(TypeReservation typeres, Reservation reservation) {
+    @Override
+    public ReservationDTO addReservationByType(TypeReservation typeres, ReservationDTO reservationDTO) {
+        Reservation reservation = convertToEntity(reservationDTO);
         reservation.setTyperes(typeres);
-        // Handle relations based on the type of reservation
-        if (typeres == TypeReservation.LOGEMENT) {
-            reservation.setLogementId(reservation.getLogementId());
-        } else if (typeres == TypeReservation.ACTIVITE) {
-            reservation.setActivityId(reservation.getActivityId());
-        } else if (typeres == TypeReservation.EVENT) {
-            reservation.setEventId(reservation.getEventId());
-        } else if (typeres == TypeReservation.RESTAURANT) {
-            reservation.setRestaurant(reservation.getRestaurant());
-        } else if (typeres == TypeReservation.TRANSPORT) {
-            reservation.setTranspId(reservation.getTranspId());
-        }
-        // Set user ID
-        reservation.setUserId(reservation.getClient().getId());
-        return reservationRepository.save(reservation);
+        // Set userId
+        reservation.setUserId(Math.toIntExact(reservationDTO.getUserId()));
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return convertToDTO(savedReservation);
     }
 
-    public Reservation updateReservationByType(TypeReservation typeres, Long id, Reservation reservation) {
+    @Override
+    public ReservationDTO updateReservationByType(TypeReservation typeres, Long id, ReservationDTO reservationDTO) {
         if (reservationRepository.existsByTyperesAndId(typeres, id)) {
+            Reservation reservation = convertToEntity(reservationDTO);
             reservation.setId(id);
             reservation.setTyperes(typeres);
-            // Handle relations based on the type of reservation
-            if (typeres == TypeReservation.LOGEMENT) {
-                reservation.setLogementId(reservation.getLogementId());
-            } else if (typeres == TypeReservation.ACTIVITE) {
-                reservation.setActivityId(reservation.getActivityId());
-            } else if (typeres == TypeReservation.EVENT) {
-                reservation.setEventId(reservation.getEventId());
-            } else if (typeres == TypeReservation.RESTAURANT) {
-                reservation.setRestaurant(reservation.getRestaurant());
-            } else if (typeres == TypeReservation.TRANSPORT) {
-                reservation.setTranspId(reservation.getTranspId());
-            }
-            // Set user ID
-            reservation.setUserId(reservation.getClient().getId());
-            return reservationRepository.save(reservation);
+            Reservation updatedReservation = reservationRepository.save(reservation);
+            return convertToDTO(updatedReservation);
         }
         throw new RuntimeException("Reservation not found");
     }
 
+    @Override
     public void deleteReservationByType(TypeReservation typeres, Long id) {
         if (reservationRepository.existsByTyperesAndId(typeres, id)) {
             reservationRepository.deleteById(id);
@@ -124,4 +213,12 @@ public class ReservationService implements IReservationService {
             throw new RuntimeException("Reservation not found");
         }
     }
+    public List<ReservationDTO> getReservationsByUserIdDTO(Long userId) {
+        List<Reservation> reservations = reservationRepository.findByClient_Id(userId); // Fetch reservations by user ID
+        return reservations.stream()
+                .map(this::convertToDTO)  // Convert each Reservation entity to ReservationDTO
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -55,5 +55,17 @@ public class Transport {
     }
 
     public void setId(Integer id) {
+        this.id=id;
     }
+    @Override
+    public String toString() {
+        return "Transport{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", capacity=" + capacity +
+                ", pricePerKm=" + pricePerKm +
+                ", available=" + available +
+                '}';
+    }
+
 }
