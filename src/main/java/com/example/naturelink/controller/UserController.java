@@ -109,8 +109,9 @@ public class UserController {
                     id,
                     System.currentTimeMillis(),
                     StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
+                            .replace(" ", "_") // Replace spaces with underscores
+                            .replace(",", "")  // Remove commas
             );
-
             // Save file
             Path targetPath = uploadDir.resolve(fileName);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
