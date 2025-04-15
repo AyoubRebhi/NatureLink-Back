@@ -1,4 +1,3 @@
-
 package com.example.naturelink.entity;
 
 import jakarta.persistence.Entity;
@@ -23,10 +22,7 @@ public class Event {
     @Column(columnDefinition = "LONGTEXT")
     private String image;
 
-public int getId()
-{
-    return id ;
-}
+
 
     public String getImage() {
         return image;

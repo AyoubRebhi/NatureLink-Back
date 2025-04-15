@@ -19,6 +19,18 @@ public class Transport {
     private Integer capacity;
     private Float pricePerKm;
     private Boolean available;
+    private String imgUrl; // New field for Cloudinary image URL
+    private String description; // ✅ New field for promotional description
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getType() {
         return type;
     }
@@ -50,22 +62,10 @@ public class Transport {
         this.available = available;
     }
 
-    public Integer getId() {
-        return id;
+    public String getImgUrl() {
+        return imgUrl;
     }
-
-    public void setId(Integer id) {
-        this.id=id;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
-    @Override
-    public String toString() {
-        return "Transport{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                ", capacity=" + capacity +
-                ", pricePerKm=" + pricePerKm +
-                ", available=" + available +
-                '}';
-    }
-
 }
