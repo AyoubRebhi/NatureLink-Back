@@ -76,4 +76,25 @@ public class GroqService {
                 params.getOrDefault("tags", "any")
         );
     }
+
+    public String generateImageSearchPrompt(String description) {
+        Map<String, Object> requestBody = Map.of(
+                "model", "llama3-70b-8192",
+                "temperature", 0.7,
+                "messages", List.of(
+                        Map.of("role", "system", "content", "You are a helpful assistant that turns descriptions into search queries for outdoor travel images."),
+                        Map.of("role", "user", "content", "Generate a descriptive image search query for this: " + description)
+                )
+        );
+
+        return webClient.post()
+                .uri("/chat/completions")
+                .header("Authorization", "Bearer " + groqApiKey)
+                .header("Content-Type", "application/json")
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
 }
