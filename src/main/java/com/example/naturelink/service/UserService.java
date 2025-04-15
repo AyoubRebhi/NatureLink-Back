@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import lombok.extern.slf4j.Slf4j;
 @Service
+@Slf4j
 public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
@@ -87,8 +88,16 @@ public class UserService implements IUserService {
     }
     public User updateProfilePic(Integer id, String fileName) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    log.error("User not found with id: {}", id);
+                    return new RuntimeException("User not found");
+                });
         user.setProfilePic(fileName);
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            log.error("Error updating profile picture for user {}: {}", id, e.getMessage());
+            throw new RuntimeException("Failed to update profile picture");
+        }
     }
 }

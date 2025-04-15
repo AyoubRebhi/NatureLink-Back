@@ -41,7 +41,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/payments/**").authenticated()
-                        .requestMatchers("/api/users/**/upload-profile-pic").authenticated()
+                        // Fix the request matcher pattern
+                        .requestMatchers(HttpMethod.POST, "/api/users/{id}/upload-profile-pic").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

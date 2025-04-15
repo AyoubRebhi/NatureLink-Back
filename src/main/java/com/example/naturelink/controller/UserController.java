@@ -6,15 +6,19 @@ import com.example.naturelink.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.Map;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -81,25 +85,44 @@ public class UserController {
         return ResponseEntity.ok(unblockedUser);
     }
     @PostMapping("/{id}/upload-profile-pic")
-    public ResponseEntity<String> uploadProfilePicture(
+    public ResponseEntity<?> uploadProfilePicture(
             @PathVariable Integer id,
             @RequestParam("file") MultipartFile file
     ) {
         try {
-            String fileName = file.getOriginalFilename();
-            String newFileName = id + "_" + Instant.now().getEpochSecond() + "_" + fileName;
+            // Validate file
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("File is empty");
+            }
+            if (!file.getContentType().startsWith("image/")) {
+                return ResponseEntity.badRequest().body("Only image files are allowed");
+            }
 
-            Path uploadDir = Paths.get("uploads");
+            // Create uploads directory if not exists
+            Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
 
-            Files.copy(file.getInputStream(), uploadDir.resolve(newFileName));
-            userService.updateProfilePic(id, newFileName);
+            // Generate unique filename
+            String fileName = String.format("%d_%d_%s",
+                    id,
+                    System.currentTimeMillis(),
+                    StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()))
+            );
 
-            return ResponseEntity.ok(newFileName);
+            // Save file
+            Path targetPath = uploadDir.resolve(fileName);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Update user profile picture
+            User updatedUser = userService.updateProfilePic(id, fileName);
+
+            return ResponseEntity.ok(updatedUser);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("File storage error: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.internalServerError().body("Server error: " + e.getMessage());
         }
     }
 }
