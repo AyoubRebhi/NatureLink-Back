@@ -19,4 +19,5 @@ public interface IUserService {
     void deleteUser(Integer id);
     User blockUser(Integer id);
     User unblockUser(Integer id);
+    User updateProfilePic(Integer id, String fileName);
 }

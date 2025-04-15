@@ -85,4 +85,10 @@ public class UserService implements IUserService {
         user.setBlocked(false);
         return userRepository.save(user);
     }
+    public User updateProfilePic(Integer id, String fileName) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setProfilePic(fileName);
+        return userRepository.save(user);
+    }
 }

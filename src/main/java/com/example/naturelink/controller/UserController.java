@@ -4,8 +4,15 @@ import com.example.naturelink.entity.Role;
 import com.example.naturelink.entity.User;
 import com.example.naturelink.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Map;
 import java.util.List;
 import java.util.Optional;
@@ -72,5 +79,27 @@ public class UserController {
     public ResponseEntity<User> unblockUser(@PathVariable Integer id) {
         User unblockedUser = userService.unblockUser(id);
         return ResponseEntity.ok(unblockedUser);
+    }
+    @PostMapping("/{id}/upload-profile-pic")
+    public ResponseEntity<String> uploadProfilePicture(
+            @PathVariable Integer id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        try {
+            String fileName = file.getOriginalFilename();
+            String newFileName = id + "_" + Instant.now().getEpochSecond() + "_" + fileName;
+
+            Path uploadDir = Paths.get("uploads");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            Files.copy(file.getInputStream(), uploadDir.resolve(newFileName));
+            userService.updateProfilePic(id, newFileName);
+
+            return ResponseEntity.ok(newFileName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

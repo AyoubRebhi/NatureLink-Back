@@ -40,6 +40,7 @@ public class User implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
     private boolean blocked;
+    private String profilePic;
     @Override
     public String getPassword() {
         return password;
@@ -85,4 +86,6 @@ public class User implements UserDetails {
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
+    public String getProfilePic() { return profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 }
