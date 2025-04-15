@@ -18,7 +18,7 @@ public class PackService implements IPackService {
     @Autowired private ITransportRepository transportRepository;
     @Autowired private IActivityRepository activityRepository;
     @Autowired private RestaurantRepository restaurantRepository;
-    @Autowired private EvenementRepository evenementRepository;
+    @Autowired private IEventRepository evenementRepository;
 
     @Override
     public List<PackDTO> getAllPacks() {
@@ -36,7 +36,7 @@ public class PackService implements IPackService {
             dto.setTransports(pack.getTransports().stream().map(Transport::getId).map(Long::valueOf).collect(Collectors.toList()));
             dto.setActivities(pack.getActivities().stream().map(Activity::getId).map(Long::valueOf).collect(Collectors.toList()));
             dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setEvenements(pack.getEvenements().stream().map(Evenement::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setEvenements(pack.getEvenements().stream().map(Event::getId).map(Long::valueOf).collect(Collectors.toList()));
 
             return dto;
         }).collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class PackService implements IPackService {
 
         // Evenements
         if (dto.getEvenements() != null && !dto.getEvenements().isEmpty()) {
-            List<Evenement> evenements = evenementRepository.findAllById(dto.getEvenements());
+            List<Event> evenements = evenementRepository.findAllById(dto.getEvenements());
             pack.setEvenements(evenements);
             associatedCount++;
         }

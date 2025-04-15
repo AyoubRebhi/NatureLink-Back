@@ -23,7 +23,7 @@ public class ReservationService implements IReservationService {
     private ILogementRepository logementRepository;
 
     @Autowired
-    private EvenementRepository evenementRepository;
+    private IEventRepository evenementRepository;
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -38,19 +38,23 @@ public class ReservationService implements IReservationService {
     private Reservation convertToEntity(ReservationDTO dto) {
         Reservation reservation = new Reservation();
         reservation.setUserId(Math.toIntExact(dto.getUserId()));
-        reservation.setUsername(dto.getUsername());
         reservation.setDateDebut(dto.getDateDebut());
         reservation.setDateFin(dto.getDateFin());
         reservation.setStatut(dto.getStatut());
-        reservation.setId(reservation.getId()); // ✅ Don't forget this
+        reservation.setId(reservation.getId()); // Don't forget this
+
+        // Set the number of clients and usernames
+        reservation.setNumClients(dto.getNumClients());
+        reservation.setClientNames(dto.getClientNames());
 
         if (dto.getLogementId() != null) {
             Logement logement = logementRepository.findById(dto.getLogementId())
                     .orElseThrow(() -> new RuntimeException("Logement not found"));
             reservation.setLogementId(logement);
             reservation.setTyperes(TypeReservation.LOGEMENT);
+            reservation.setNumRooms(dto.getNumRooms()); // Set number of rooms if the reservation is for logement
         } else if (dto.getEventId() != null) {
-            Evenement event = evenementRepository.findById(dto.getEventId())
+            Event event = evenementRepository.findById(dto.getEventId())
                     .orElseThrow(() -> new RuntimeException("Event not found"));
             reservation.setEventId(event);
             reservation.setTyperes(TypeReservation.EVENT);
@@ -79,18 +83,19 @@ public class ReservationService implements IReservationService {
     // Method to convert from Reservation entity to ReservationDTO
     private ReservationDTO convertToDTO(Reservation reservation) {
         return new ReservationDTO(
-                reservation.getUser().getId(),
-                reservation.getUsername(),
+                Long.valueOf(reservation.getClient().getId()),
                 reservation.getDateDebut(),
                 reservation.getDateFin(),
                 reservation.getLogementId() != null ? Long.valueOf(reservation.getLogementId().getId()) : null,
-                reservation.getEventId() != null ? reservation.getEventId().getId() : null,
+                reservation.getEventId() != null ? Long.valueOf(reservation.getEventId().getId()) : null,
                 reservation.getRestaurant() != null ? reservation.getRestaurant().getId() : null,
                 reservation.getTranspId() != null ? reservation.getTranspId().getId() : null,
                 reservation.getActivityId() != null ? reservation.getActivityId().getId() : null,
                 reservation.getStatut(),
-                reservation.getId() // ✅ Don't forget this
-
+                reservation.getId(),
+                reservation.getNumClients(),  // Add number of clients
+                reservation.getNumRooms(),    // Add number of rooms (if LOGEMENT)
+                reservation.getClientNames()  // Add list of usernames
         );
     }
 
@@ -110,12 +115,7 @@ public class ReservationService implements IReservationService {
 
     @Override
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
-        ReservationDTO dto = null;
-        System.out.println("Logement set during save: " + dto.getLogementId());
-        ReservationDTO reservation1 = null;
-        System.out.println("Logement returned in get: " +
-                (reservation1.getLogementId() != null ? reservation1.getLogementId() : "NULL"));
-
+        // Handle reservation creation with validation based on the number of clients
         Reservation reservation = convertToEntity(reservationDTO);
         Reservation savedReservation = reservationRepository.save(reservation);
         return convertToDTO(savedReservation);
@@ -213,12 +213,11 @@ public class ReservationService implements IReservationService {
             throw new RuntimeException("Reservation not found");
         }
     }
+
     public List<ReservationDTO> getReservationsByUserIdDTO(Long userId) {
         List<Reservation> reservations = reservationRepository.findByClient_Id(userId); // Fetch reservations by user ID
         return reservations.stream()
                 .map(this::convertToDTO)  // Convert each Reservation entity to ReservationDTO
                 .collect(Collectors.toList());
     }
-
-
 }

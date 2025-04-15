@@ -1,10 +1,12 @@
 package com.example.naturelink.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class ReservationDTO {
+
     private Long userId;
-    private String username;
+
     private Date dateDebut;
     private Date dateFin;
     private Long logementId;
@@ -13,14 +15,20 @@ public class ReservationDTO {
     private Integer transportId;
     private Integer activityId;
     private String statut;
-    private Long id; // <--- Make sure this is here
+    private Long id; // Ensure this is here
+
+    // New fields
+    private Integer numClients; // Number of clients
+    private Integer numRooms; // Number of rooms (only for logement reservations)
+    private List<String> clientNames; // List of client names for each client in the reservation
 
     // Constructor
-    public ReservationDTO(Integer userId, String username, Date dateDebut, Date dateFin,
+    public ReservationDTO(Long userId,  Date dateDebut, Date dateFin,
                           Long logementId, Long eventId, Long restaurantId,
-                          Integer transportId, Integer activityId, String statut,Long id) {
-        this.userId = Long.valueOf(userId);
-        this.username = username;
+                          Integer transportId, Integer activityId, String statut,
+                          Long id, Integer numClients, Integer numRooms, List<String> clientNames) {
+        this.userId = userId;
+
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.logementId = logementId;
@@ -29,12 +37,17 @@ public class ReservationDTO {
         this.transportId = transportId;
         this.activityId = activityId;
         this.statut = statut;
-        this.id = id ;
+        this.id = id;
+        this.numClients = numClients;
+        this.numRooms = numRooms;
+        this.clientNames = clientNames;
     }
 
     // Default constructor (required for deserialization)
     public ReservationDTO() {
     }
+
+    // Getter and Setter methods
 
     public Long getUserId() {
         return userId;
@@ -44,13 +57,7 @@ public class ReservationDTO {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public Date getDateDebut() {
         return dateDebut;
@@ -122,5 +129,32 @@ public class ReservationDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    // Getter and Setter for numClients
+    public Integer getNumClients() {
+        return numClients;
+    }
+
+    public void setNumClients(Integer numClients) {
+        this.numClients = numClients;
+    }
+
+    // Getter and Setter for numRooms
+    public Integer getNumRooms() {
+        return numRooms;
+    }
+
+    public void setNumRooms(Integer numRooms) {
+        this.numRooms = numRooms;
+    }
+
+    // Getter and Setter for clientNames (list of client names)
+    public List<String> getClientNames() {
+        return clientNames;
+    }
+
+    public void setClientNames(List<String> clientNames) {
+        this.clientNames = clientNames;
     }
 }

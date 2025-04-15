@@ -1,19 +1,19 @@
 package com.example.naturelink.services;
 
-import com.example.naturelink.entity.Evenement;
+import com.example.naturelink.entity.Event;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IEvenementService {
 
-    List<Evenement> getAllEvenements();
+    List<Event> getAllEvenements();
 
-    Optional<Evenement> getEvenementById(Long id);
+    Optional<Event> getEvenementById(Long id);
 
-    Evenement addEvenement(Evenement evenement);
+    Event addEvenement(Event evenement);
 
-    Evenement updateEvenement(Long id, Evenement evenement);
+    Event updateEvenement(Long id, Event evenement);
 
     void deleteEvenement(Long id);
 }

@@ -72,7 +72,7 @@ public class Pack {
             joinColumns = @JoinColumn(name = "pack_id"),
             inverseJoinColumns = @JoinColumn(name = "evenement_id")
     )
-    private List<Evenement> evenements = new ArrayList<>();
+    private List<Event> evenements = new ArrayList<>();
 
     // Getters & Setters
     public Long getId() {
@@ -147,11 +147,11 @@ public class Pack {
         this.restaurants = (restaurants != null) ? restaurants : new ArrayList<>();
     }
 
-    public List<Evenement> getEvenements() {
+    public List<Event> getEvenements() {
         return evenements;
     }
 
-    public void setEvenements(List<Evenement> evenements) {
+    public void setEvenements(List<Event> evenements) {
         this.evenements = (evenements != null) ? evenements : new ArrayList<>();
     }
 

@@ -37,38 +37,34 @@ public class ReservationController {
     // Add a new reservation
     @PostMapping
     public ResponseEntity<Map<String, String>> createReservation(@RequestBody ReservationDTO reservationDTO) {
-        // Validate required fields: userId, username, start date, and end date
+        // Validate required fields: userId, start date, and end date
         if (reservationDTO.getUserId() == null ||
-                reservationDTO.getUsername() == null || reservationDTO.getUsername().isEmpty() ||
                 reservationDTO.getDateDebut() == null ||
-                reservationDTO.getDateFin() == null) {
+                reservationDTO.getDateFin() == null ||
+                reservationDTO.getNumClients() == null ||
+                reservationDTO.getClientNames() == null || reservationDTO.getClientNames().isEmpty()) {
 
-            return ResponseEntity.badRequest().body(Map.of("error", "User ID, username, start date, and end date are required."));
+            return ResponseEntity.badRequest().body(Map.of("error", "User ID, start date, end date, numClients, and clientNames are required."));
         }
 
         // Handle reservation for logement only if logementId is provided
         if (reservationDTO.getLogementId() != null) {
-            // Handle reservation for logement
             reservationService.addReservationByType(TypeReservation.LOGEMENT, reservationDTO);
         }
         // Handle reservation for event only if eventId is provided
         else if (reservationDTO.getEventId() != null) {
-            // Handle reservation for event
             reservationService.addReservationByType(TypeReservation.EVENT, reservationDTO);
         }
         // Handle reservation for restaurant only if restaurantId is provided
         else if (reservationDTO.getRestaurantId() != null) {
-            // Handle reservation for restaurant
             reservationService.addReservationByType(TypeReservation.RESTAURANT, reservationDTO);
         }
         // Handle reservation for transport only if transportId is provided
         else if (reservationDTO.getTransportId() != null) {
-            // Handle reservation for transport
             reservationService.addReservationByType(TypeReservation.TRANSPORT, reservationDTO);
         }
         // Handle reservation for activity only if activityId is provided
         else if (reservationDTO.getActivityId() != null) {
-            // Handle reservation for activity
             reservationService.addReservationByType(TypeReservation.ACTIVITE, reservationDTO);
         } else {
             return ResponseEntity.badRequest().body(Map.of("error", "At least one entity (logement, event, etc.) must be provided for the reservation."));
@@ -77,7 +73,6 @@ public class ReservationController {
         // Process reservation, save, etc.
         return ResponseEntity.ok(Map.of("message", "Reservation created successfully!"));
     }
-
 
     // Update an existing reservation
     @PutMapping("/{id}")
@@ -172,6 +167,7 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReservationDTO>> getReservationsByUserId(@PathVariable Long userId) {
         List<ReservationDTO> reservations = reservationService.getReservationsByUserIdDTO(userId);
@@ -180,5 +176,4 @@ public class ReservationController {
         }
         return ResponseEntity.ok(reservations);
     }
-
 }
