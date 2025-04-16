@@ -13,6 +13,8 @@
         private List<Long> evenements;
         private Long userId;
         private Long id; // <--- Make sure this is here
+        private double averageRating;
+
 
 
         // Getters and Setters remain the same
@@ -40,5 +42,12 @@
 
         public void setId(Long id) {
             this.id = id;
+        }
+        public double getAverageRating() {
+            return averageRating;
+        }
+
+        public void setAverageRating(double averageRating) {
+            this.averageRating = averageRating;
         }
     }

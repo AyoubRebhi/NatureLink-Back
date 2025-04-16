@@ -1,8 +1,11 @@
-package com.example.naturelink.controllers;
+package com.example.naturelink.controller;
 
 import com.example.naturelink.dto.PackDTO;
+import com.example.naturelink.dto.RatingDTO;
 import com.example.naturelink.entity.Pack;
-import com.example.naturelink.services.IPackService;
+import com.example.naturelink.service.IPackService;
+import com.example.naturelink.service.RatingService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,8 @@ import java.util.Optional;
 public class PackController {
 
     private final IPackService packService;
+    private RatingService ratingService;  // Inject RatingService here
+
     public PackController(IPackService packService) {
         this.packService = packService;
     }
@@ -62,4 +67,22 @@ public class PackController {
         Optional<Pack> pack = packService.getPackById(id);
         return pack.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @PostMapping("/ratings")
+    public ResponseEntity<String> addRating(@RequestBody RatingDTO ratingDTO) {
+        try {
+            // Call rating service to add the rating
+            ratingService.addRating(ratingDTO.getReservationId(), ratingDTO.getRatingValue(), ratingDTO.getUserId());
+            return ResponseEntity.ok("Rating added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error adding rating: " + e.getMessage());
+        }
+    }
+
+    // Endpoint to get the average rating of a pack
+    @GetMapping("/{id}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Long id) {
+        double avgRating = ratingService.getAverageRatingForPack(id);
+        return ResponseEntity.ok(avgRating);
+    }
 }
+

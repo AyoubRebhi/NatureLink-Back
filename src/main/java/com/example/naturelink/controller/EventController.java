@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/event")
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Lombok will generate the constructor for you
 @CrossOrigin("*")
 public class EventController {
+
     private final EventService eventService;
     private final ExportPDFService exportPDFService;
 
-
+    // Explicit constructor injection
+    @Autowired
+    public EventController(EventService eventService, ExportPDFService exportPDFService) {
+        this.eventService = eventService;
+        this.exportPDFService = exportPDFService;
+    }
     @GetMapping("/export/pdf")
     public ResponseEntity<InputStreamResource> exportAllEventsToPdf() {
         var events = eventService.getAllEvents();
@@ -34,11 +39,10 @@ public class EventController {
                 .body(new InputStreamResource(pdf));
     }
 
-
     @PostMapping("/add")
-    public Event createEvent(@RequestBody Event event) {return eventService.createEvent(event);
+    public Event createEvent(@RequestBody Event event) {
+        return eventService.createEvent(event);
     }
-
 
     @GetMapping("/All")
     public List<Event> getAllEvents() {
@@ -54,26 +58,23 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
-
     @PutMapping("/All/{id}")
-    public ResponseEntity<?> updateEvent(@PathVariable int id,@RequestBody Event event) {
-
+    public ResponseEntity<?> updateEvent(@PathVariable int id, @RequestBody Event event) {
         Event updatedEvent = eventService.getEventById(id);
-    if (updatedEvent == null) {
-    return ResponseEntity.notFound().build();
-    }
-    updatedEvent.setDate(event.getDate());
-    updatedEvent.setDescription(event.getDescription());
-    updatedEvent.setLocation(event.getLocation());
-    updatedEvent.setFounder(event.getFounder());
-    updatedEvent.setNbrplace(event.getNbrplace());
-    updatedEvent.setTitle(event.getTitle());
-    updatedEvent.setImage(event.getImage());
+        if (updatedEvent == null) {
+            return ResponseEntity.notFound().build();
+        }
+        updatedEvent.setDate(event.getDate());
+        updatedEvent.setDescription(event.getDescription());
+        updatedEvent.setLocation(event.getLocation());
+        updatedEvent.setFounder(event.getFounder());
+        updatedEvent.setNbrplace(event.getNbrplace());
+        updatedEvent.setTitle(event.getTitle());
+        updatedEvent.setImage(event.getImage());
+
         Event event1 = eventService.updateEvent(updatedEvent);
-return ResponseEntity.ok(event1);
+        return ResponseEntity.ok(event1);
     }
-
-
 
     @DeleteMapping("/All/delete/{id}")
     public ResponseEntity<Event> deleteEvent(@PathVariable int id) {

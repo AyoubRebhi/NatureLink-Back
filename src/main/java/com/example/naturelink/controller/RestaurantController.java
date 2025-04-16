@@ -1,7 +1,7 @@
-package com.example.naturelink.controllers;
+package com.example.naturelink.controller;
 
 import com.example.naturelink.entity.Restaurant;
-import com.example.naturelink.services.IRestaurantService;
+import com.example.naturelink.service.IRestaurantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

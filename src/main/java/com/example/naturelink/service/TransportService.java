@@ -30,7 +30,7 @@ public class TransportService implements ITransportService{
 
     @Override
     public Optional<Transport> getTransportById(Integer id) {
-        return transportRepository.findById(id);
+        return transportRepository.findById(Long.valueOf(id));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TransportService implements ITransportService{
 
     @Override
     public Transport updateTransport(Integer id, Transport transportDetails) {
-        return transportRepository.findById(id).map(transport -> {
+        return transportRepository.findById(Long.valueOf(id)).map(transport -> {
             transport.setType(transportDetails.getType());
             transport.setCapacity(transportDetails.getCapacity());
             transport.setPricePerKm(transportDetails.getPricePerKm());
@@ -52,7 +52,7 @@ public class TransportService implements ITransportService{
 
     @Override
     public void deleteTransport(Integer id) {
-        transportRepository.deleteById(id);
+        transportRepository.deleteById(Long.valueOf(id));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class TransportService implements ITransportService{
     }
     @Override
     public Transport updateTransportWithImage(Integer id, Transport transportDetails, MultipartFile imageFile) {
-        return transportRepository.findById(id).map(transport -> {
+        return transportRepository.findById(Long.valueOf(id)).map(transport -> {
             transport.setType(transportDetails.getType());
             transport.setCapacity(transportDetails.getCapacity());
             transport.setPricePerKm(transportDetails.getPricePerKm());

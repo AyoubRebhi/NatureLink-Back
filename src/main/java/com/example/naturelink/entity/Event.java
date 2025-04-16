@@ -81,6 +81,7 @@ public class Event {
         this.nbrplace = nbrplace;
     }
 
-
-
+    public int getId() {
+        return id;
+    }
 }

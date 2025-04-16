@@ -21,7 +21,7 @@ public class TransportRatingService implements ITransportRatingService {
 
     @Override
     public TransportRating addRating(TransportRating rating) {
-        Transport transport = transportRepository.findById(rating.getTransportId())
+        Transport transport = transportRepository.findById(Long.valueOf(rating.getTransportId()))
                 .orElseThrow(() -> new RuntimeException("Transport not found"));
 
         rating.setTransport(transport);            // Set the actual transport entity

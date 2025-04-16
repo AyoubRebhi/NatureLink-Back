@@ -21,6 +21,7 @@ public class ReservationDTO {
     private Integer numClients; // Number of clients
     private Integer numRooms; // Number of rooms (only for logement reservations)
     private List<String> clientNames; // List of client names for each client in the reservation
+    private String typeres;
 
     // Constructor
     public ReservationDTO(Long userId,  Date dateDebut, Date dateFin,
@@ -156,5 +157,13 @@ public class ReservationDTO {
 
     public void setClientNames(List<String> clientNames) {
         this.clientNames = clientNames;
+    }
+
+    public String getTyperes() {
+        return typeres;
+    }
+
+    public void setTyperes(String typeres) {
+        this.typeres = typeres;
     }
 }

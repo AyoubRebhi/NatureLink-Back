@@ -1,4 +1,4 @@
-package com.example.naturelink.services;
+package com.example.naturelink.service;
 
 import com.example.naturelink.dto.ReservationDTO;
 import com.example.naturelink.entity.Reservation;
@@ -6,9 +6,15 @@ import com.example.naturelink.repository.ReservationRepository;
 import com.example.naturelink.entity.*;
 import com.example.naturelink.repository.*;
 
+import com.example.naturelink.service.IReservationService;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.naturelink.service.ExportPDFService; // Import your ExportPDFService
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +39,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     private IActivityRepository activityRepository;
+    @Autowired
+    private ExportPDFService exportPDFService; // Autowire the PDF export service
+
 
     // Method to convert from ReservationDTO to Reservation entity
     private Reservation convertToEntity(ReservationDTO dto) {
@@ -220,4 +229,65 @@ public class ReservationService implements IReservationService {
                 .map(this::convertToDTO)  // Convert each Reservation entity to ReservationDTO
                 .collect(Collectors.toList());
     }
+
+    public ByteArrayInputStream generateReservationPDF(Long reservationId, Reservation reservation) {
+        Document document = new Document(PageSize.A4);  // Create the document instance
+        ByteArrayOutputStream out = new ByteArrayOutputStream();  // ByteArrayOutputStream to hold the PDF content
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(document, out);  // Initialize the PdfWriter
+            document.open();  // Open the document to write content
+
+            // Add title to the document
+            Font titleFont = new Font(Font.HELVETICA, 18, Font.BOLD);
+            Paragraph title = new Paragraph("Reservation Details", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            // Add reservation ID to the document
+            Font headerFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+            Paragraph reservationIdParagraph = new Paragraph("Reservation ID: " + reservationId, headerFont);
+            reservationIdParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(reservationIdParagraph);
+
+            // Add space before reservation details
+            document.add(Chunk.NEWLINE);
+
+            // Add client names, start date, end date, status, and type
+            Font regularFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
+
+            Paragraph clientNames = new Paragraph("Client Names: " + String.join(", ", reservation.getClientNames()), regularFont);
+            document.add(clientNames);
+
+            Paragraph dateDebut = new Paragraph("Start Date: " + reservation.getDateDebut(), regularFont);
+            document.add(dateDebut);
+
+            Paragraph dateFin = new Paragraph("End Date: " + reservation.getDateFin(), regularFont);
+            document.add(dateFin);
+
+            Paragraph statut = new Paragraph("Status: " + reservation.getStatut(), regularFont);
+            document.add(statut);
+
+            Paragraph reservationType = new Paragraph("Reservation Type: " + reservation.getTyperes(), regularFont);
+            document.add(reservationType);
+
+            // Add space for footer
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+
+            // Add footer text
+            Font footerFont = new Font(Font.HELVETICA, 10, Font.ITALIC);
+            Paragraph footer = new Paragraph("Thank you for booking with us. For any inquiries, contact support@example.com", footerFont);
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } finally {
+            document.close();  // Always close the document
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());  // Return the generated PDF as a ByteArrayInputStream
+    }
+
 }
+

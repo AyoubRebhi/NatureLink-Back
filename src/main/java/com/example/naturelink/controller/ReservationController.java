@@ -1,13 +1,20 @@
-package com.example.naturelink.controllers;
+package com.example.naturelink.controller;
 
 import com.example.naturelink.dto.ReservationDTO;
 import com.example.naturelink.entity.Reservation;
 import com.example.naturelink.entity.TypeReservation;
-import com.example.naturelink.services.ReservationService;
+import com.example.naturelink.service.ExportPDFService;
+import com.example.naturelink.service.ReservationService;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;  // Add this import
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +26,9 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    ExportPDFService exportPDFService;
 
     // Get all reservations
     @GetMapping
@@ -176,4 +186,33 @@ public class ReservationController {
         }
         return ResponseEntity.ok(reservations);
     }
+
+    // Endpoint to generate and download reservation PDF
+    @GetMapping("/api/reservations/{id}/pdf")
+    public ResponseEntity<byte[]> downloadReservationPDF(@PathVariable("id") Long id) {
+        Optional<ReservationDTO> reservationOpt = reservationService.getReservationById(id); // Get the Reservation entity
+
+        if (!reservationOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Return 404 if the reservation is not found
+        }
+
+        ReservationDTO reservation = reservationOpt.get();  // Get the Reservation entity
+
+        // Now pass both the ID and the Reservation entity to generateReservationPDF
+
+
+        ByteArrayInputStream bis = exportPDFService.generateReservationPDF(id, reservation);
+
+        byte[] pdfContent = bis.readAllBytes();  // Convert the input stream to byte array
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=reservation_" + id + ".pdf");
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
+
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);  // Return the PDF with appropriate headers
+    }
+
 }
+
+
+

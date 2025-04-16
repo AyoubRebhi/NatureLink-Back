@@ -3,6 +3,7 @@ package com.example.naturelink.service;
 import com.example.naturelink.entity.Event;
 import com.example.naturelink.repository.IEventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventService {
     private final IEventRepository eventRepository;
-
+    @Autowired
+    public EventService(IEventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 public Event createEvent(Event event) {
     return eventRepository.save(event);
 }
@@ -20,7 +24,7 @@ public List<Event> getAllEvents() {
 }
 
 public Event getEventById(int id) {
-    return eventRepository.findById(id).orElse(null);
+    return eventRepository.findById(Long.valueOf(id)).orElse(null);
 }
 
 
@@ -28,6 +32,6 @@ public Event updateEvent(Event event) {
     return eventRepository.save(event);
 }
 public void deleteEventById(int id) {
-    eventRepository.deleteById(id);
+    eventRepository.deleteById(Long.valueOf(id));
 }
 }

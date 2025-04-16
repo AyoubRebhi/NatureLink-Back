@@ -39,10 +39,11 @@ public class Reservation {
 
     private Integer numClients; // Number of clients involved in the reservation
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "reservation_client_names", joinColumns = @JoinColumn(name = "reservation_id"))
-    @Column(name = "client_names    ") // For storing the names of clients in a list
-    private List<String> clientNames; // List of client names for each client in the reservation
+    @Column(name = "client_names")
+    private List<String> clientNames;
+
 
     private Integer numRooms; // Number of rooms (only for logement type)
 

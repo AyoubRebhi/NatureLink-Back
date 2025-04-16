@@ -25,7 +25,7 @@ public class Pack {
     private double prix;
     private String description;
 
-    @Nullable
+
     @ManyToOne
     private User user;
 

@@ -1,10 +1,12 @@
-package com.example.naturelink.services;
+package com.example.naturelink.service;
 
-import com.example.naturelink.dto.PackDTO;
 import com.example.naturelink.entity.*;
 import com.example.naturelink.repository.*;
+import com.example.naturelink.service.IPackService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.naturelink.dto.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,8 +21,12 @@ public class PackService implements IPackService {
     @Autowired private IActivityRepository activityRepository;
     @Autowired private RestaurantRepository restaurantRepository;
     @Autowired private IEventRepository evenementRepository;
+    @Autowired private RatingService ratingService;  // Inject RatingService
+
 
     @Override
+    @Transactional
+
     public List<PackDTO> getAllPacks() {
         List<Pack> packs = packRepository.findAll();
 
@@ -37,6 +43,10 @@ public class PackService implements IPackService {
             dto.setActivities(pack.getActivities().stream().map(Activity::getId).map(Long::valueOf).collect(Collectors.toList()));
             dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).map(Long::valueOf).collect(Collectors.toList()));
             dto.setEvenements(pack.getEvenements().stream().map(Event::getId).map(Long::valueOf).collect(Collectors.toList()));
+
+            // Calculate average rating for the pack
+            double avgRating = ratingService.getAverageRatingForPack(pack.getId());
+            dto.setAverageRating(avgRating);  // Set the average rating for the pack
 
             return dto;
         }).collect(Collectors.toList());

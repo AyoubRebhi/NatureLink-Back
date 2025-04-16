@@ -1,7 +1,7 @@
-package com.example.naturelink.controllers;
+package com.example.naturelink.controller;
 
 import com.example.naturelink.entity.Menu;
-import com.example.naturelink.services.IMenuService;
+import com.example.naturelink.service.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.example.naturelink.services;
+package com.example.naturelink.service;
 
 import com.example.naturelink.dto.PackDTO;
 import com.example.naturelink.entity.Pack;
