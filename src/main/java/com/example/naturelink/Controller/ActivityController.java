@@ -33,24 +33,24 @@ public class ActivityController {
         this.activityServiceImpl = activityServiceImpl;
         this.groqService = groqService;
     }
-    @PostMapping("/generate-image-query")
-    public ResponseEntity<?> generateImageSearchPrompt(@RequestBody Map<String, String> body) {
-        String description = body.get("description");
-
-        if (description == null || description.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Description is required"));
-        }
-
+    @PostMapping("/get-activity-images")
+    public ResponseEntity<?> getActivityImages(@RequestBody Map<String, String> body) {
         try {
-            String result = groqService.generateImageSearchPrompt(description);
+            String description = body.get("description");
+            if (description == null || description.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Description is required"));
+            }
 
-            return ResponseEntity.ok(Map.of("query", result));
+            List<String> images = groqService.getActivityImages(description);
+            return ResponseEntity.ok(Map.of("images", images));
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to generate image query", "details", e.getMessage()));
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "error", "Failed to process request",
+                    "details", e.getMessage()
+            ));
         }
     }
-
     @PostMapping("/generate")
     public ResponseEntity<String> generateActivity(@RequestBody Map<String, String> promptParams) {
         try {
