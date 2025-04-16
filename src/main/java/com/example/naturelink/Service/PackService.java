@@ -31,13 +31,13 @@ public class PackService implements IPackService {
             dto.setPrix(pack.getPrix());
             dto.setDescription(pack.getDescription());
             dto.setId(pack.getId());
-            dto.setUserId(Long.valueOf(pack.getUser() != null ? pack.getUser().getId() : null));
+            dto.setUserId(pack.getUser() != null ? pack.getUser().getId().longValue() : null);
 
             dto.setLogements(pack.getLogements().stream().map(Logement::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setTransports(pack.getTransports().stream().map(Transport::getId).map(Integer::valueOf).collect(Collectors.toList()));
+            dto.setTransports(pack.getTransports().stream().map(Transport::getId).collect(Collectors.toList()));
             dto.setActivities(pack.getActivities().stream().map(Activity::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setEvenements(pack.getEvenements().stream().map(Event::getId).map(Integer::valueOf).collect(Collectors.toList()));
+            dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).collect(Collectors.toList()));
+            dto.setEvenements(pack.getEvenements().stream().map(Event::getId).collect(Collectors.toList()));
 
             return dto;
         }).collect(Collectors.toList());
@@ -81,33 +81,38 @@ public class PackService implements IPackService {
             associatedCount++;
         }
 
-        // Transports
+        // Transports - convert to correct ID type
         if (dto.getTransports() != null && !dto.getTransports().isEmpty()) {
-            List<Transport> transports = transportRepository.findAllById(dto.getTransports());
+            List<Transport> transports = transportRepository.findAllById(
+                    dto.getTransports().stream()
+                            .map(Integer::longValue) // Convert Integer to Long if needed
+                            .collect(Collectors.toList())
+            );
             pack.setTransports(transports);
             associatedCount++;
         }
 
-        // Evenements
+        // Evenements - convert to correct ID type
         if (dto.getEvenements() != null && !dto.getEvenements().isEmpty()) {
-            List<Event> evenements = evenementRepository.findAllById(dto.getEvenements());
+            List<Event> evenements = evenementRepository.findAllById(
+                    dto.getEvenements().stream()
+                            .map(Integer::longValue) // Convert Integer to Long if needed
+                            .collect(Collectors.toList())
+            );
             pack.setEvenements(evenements);
             associatedCount++;
         }
 
-        // Check: Must have at least 2 types of entities associated
         if (associatedCount < 2) {
             throw new IllegalArgumentException("A pack must contain at least two associated elements.");
         }
 
-        // Static user assignment
-        User user = userRepository.findById(Math.toIntExact(dto.getUserId()))
+        User user = userRepository.findById(dto.getUserId().intValue())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
         pack.setUser(user);
 
         return packRepository.save(pack);
     }
-
 
     @Override
     public Pack updatePack(Long id, PackDTO dto) {
@@ -118,16 +123,33 @@ public class PackService implements IPackService {
         existingPack.setPrix(dto.getPrix());
         existingPack.setDescription(dto.getDescription());
 
-        // Directly use List<Long>
-        existingPack.setLogements(logementRepository.findAllById(dto.getLogements()));
-        existingPack.setTransports(transportRepository.findAllById(dto.getTransports()));
-        existingPack.setActivities(activityRepository.findAllById(dto.getActivities()));
-        existingPack.setRestaurants(restaurantRepository.findAllById(dto.getRestaurants()));
-        existingPack.setEvenements(evenementRepository.findAllById(dto.getEvenements()));
+        // Update associations with proper ID type conversion
+        if (dto.getLogements() != null) {
+            existingPack.setLogements(logementRepository.findAllById(dto.getLogements()));
+        }
+        if (dto.getTransports() != null) {
+            existingPack.setTransports(transportRepository.findAllById(
+                    dto.getTransports().stream()
+                            .map(Integer::longValue)
+                            .collect(Collectors.toList())
+            ));
+        }
+        if (dto.getActivities() != null) {
+            existingPack.setActivities(activityRepository.findAllById(dto.getActivities()));
+        }
+        if (dto.getRestaurants() != null) {
+            existingPack.setRestaurants(restaurantRepository.findAllById(dto.getRestaurants()));
+        }
+        if (dto.getEvenements() != null) {
+            existingPack.setEvenements(evenementRepository.findAllById(
+                    dto.getEvenements().stream()
+                            .map(Integer::longValue)
+                            .collect(Collectors.toList())
+            ));
+        }
 
         return packRepository.save(existingPack);
     }
-
 
     @Override
     public void deletePack(Long id) {

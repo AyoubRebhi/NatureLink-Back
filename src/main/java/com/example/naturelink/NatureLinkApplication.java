@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories("com.example.naturelink.repository")
+@EnableJpaRepositories("com.example.naturelink.Repository")
 @EntityScan("com.example.naturelink.entity")
 
 @SpringBootApplication
