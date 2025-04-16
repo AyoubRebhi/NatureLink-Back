@@ -2,7 +2,7 @@ package com.example.naturelink.controllers;
 
 import com.example.naturelink.dto.PackDTO;
 import com.example.naturelink.entity.Pack;
-import com.example.naturelink.services.IPackService;
+import com.example.naturelink.Service.IPackService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
