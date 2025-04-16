@@ -1,7 +1,7 @@
-package com.example.naturelink.controller;
+package com.example.naturelink.Controller;
 
-import com.example.naturelink.entity.User;
-import com.example.naturelink.service.IUserService;
+import com.example.naturelink.Entity.User;
+import com.example.naturelink.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
