@@ -1,6 +1,6 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
-import com.example.naturelink.entity.Transport;
+import com.example.naturelink.Entity.Transport;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

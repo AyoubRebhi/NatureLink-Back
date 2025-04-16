@@ -1,7 +1,6 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -77,7 +76,7 @@ public class GroqService {
         );
     }
 
-    public String generateImageSearchPrompt(String description) {
+        public String generateImageSearchPrompt(String description) {
         Map<String, Object> requestBody = Map.of(
                 "model", "llama3-70b-8192",
                 "temperature", 0.7,

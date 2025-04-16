@@ -1,4 +1,4 @@
-package com.example.naturelink.entity;
+package com.example.naturelink.Entity;
 
 import jakarta.persistence.*;
 

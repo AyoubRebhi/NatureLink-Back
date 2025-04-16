@@ -1,9 +1,9 @@
-package com.example.naturelink.controller;
+package com.example.naturelink.Controller;
 
-import com.example.naturelink.entity.Activity;
-import com.example.naturelink.service.ActivityService;
-import com.example.naturelink.service.GroqService;
-import com.example.naturelink.service.IActivityService;
+import com.example.naturelink.Entity.Activity;
+import com.example.naturelink.Service.ActivityService;
+import com.example.naturelink.Service.GroqService;
+import com.example.naturelink.Service.IActivityService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class ActivityController {
 
     private final IActivityService activityService;
-    private final com.example.naturelink.service.ActivityService activityServiceImpl;
+    private final com.example.naturelink.Service.ActivityService activityServiceImpl;
 
-    private final com.example.naturelink.service.GroqService groqService;
+    private final com.example.naturelink.Service.GroqService groqService;
     public ActivityController(IActivityService activityService, ActivityService activityServiceImpl, GroqService groqService) {
         this.activityService = activityService;
         this.activityServiceImpl = activityServiceImpl;
@@ -120,7 +120,7 @@ public class ActivityController {
         }
     }
 
-    //Recommandation controller
+    //Recommandation Controller
     @PostMapping("/recommend")
     public ResponseEntity<?> recommendActivities(@RequestBody Map<String, String> userInput) {
         List<Activity> allActivities = activityService.getAllActivities();

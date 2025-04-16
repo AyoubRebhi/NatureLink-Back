@@ -1,9 +1,9 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.naturelink.entity.Activity;
-import com.example.naturelink.repository.IActivityRepository;
+import com.example.naturelink.Entity.Activity;
+import com.example.naturelink.Repository.IActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,12 +33,12 @@ public class ActivityService implements IActivityService {
 
     @Override
     public Optional<Activity> getActivityById(Integer id) {
-        return activityRepository.findById(id);
+        return activityRepository.findById(Long.valueOf(id));
     }
 
     @Override
     public void deleteActivity(Integer id) {
-        activityRepository.deleteById(id);
+        activityRepository.deleteById(Long.valueOf(id));
     }
     public Activity addActivityWithImages(Activity activity, List<MultipartFile> imageFiles) {
         List<String> uploadedImageUrls = new ArrayList<>();
@@ -54,7 +54,7 @@ public class ActivityService implements IActivityService {
         return activityRepository.save(activity);
     }
     public Activity updateActivityWithImages(Integer id, Activity activityDetails, List<MultipartFile> imageFiles) {
-        return activityRepository.findById(id).map(activity -> {
+        return activityRepository.findById(Long.valueOf(id)).map(activity -> {
             activity.setName(activityDetails.getName());
             activity.setDescription(activityDetails.getDescription());
             activity.setProviderId(activityDetails.getProviderId());

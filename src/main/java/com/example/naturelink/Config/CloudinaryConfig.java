@@ -1,4 +1,4 @@
-package com.example.naturelink.config;
+package com.example.naturelink.Config;
 
 import com.cloudinary.Cloudinary;
 import org.springframework.context.annotation.Bean;

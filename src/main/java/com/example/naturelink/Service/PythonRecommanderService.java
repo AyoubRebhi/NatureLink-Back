@@ -1,4 +1,4 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
 public class PythonRecommanderService {
 }

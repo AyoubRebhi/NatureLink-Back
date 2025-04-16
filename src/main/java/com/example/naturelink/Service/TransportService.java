@@ -1,9 +1,9 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.naturelink.entity.Transport;
-import com.example.naturelink.repository.ITransportRepository;
+import com.example.naturelink.Entity.Transport;
+import com.example.naturelink.Repository.ITransportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
