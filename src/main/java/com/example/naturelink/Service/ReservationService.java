@@ -1,10 +1,8 @@
-package com.example.naturelink.services;
+package com.example.naturelink.Service;
 
 import com.example.naturelink.dto.ReservationDTO;
-import com.example.naturelink.entity.Reservation;
-import com.example.naturelink.repository.ReservationRepository;
-import com.example.naturelink.entity.*;
-import com.example.naturelink.repository.*;
+import com.example.naturelink.Entity.*;
+import com.example.naturelink.Repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +52,7 @@ public class ReservationService implements IReservationService {
             reservation.setTyperes(TypeReservation.LOGEMENT);
             reservation.setNumRooms(dto.getNumRooms()); // Set number of rooms if the reservation is for logement
         } else if (dto.getEventId() != null) {
-            Event event = evenementRepository.findById(dto.getEventId())
+            Event event = evenementRepository.findById(Math.toIntExact(dto.getEventId()))
                     .orElseThrow(() -> new RuntimeException("Event not found"));
             reservation.setEventId(event);
             reservation.setTyperes(TypeReservation.EVENT);
@@ -64,7 +62,7 @@ public class ReservationService implements IReservationService {
             reservation.setRestaurant(restaurant);
             reservation.setTyperes(TypeReservation.RESTAURANT);
         } else if (dto.getTransportId() != null) {
-            Transport transport = transportRepository.findById(Long.valueOf(dto.getTransportId()))
+            Transport transport = transportRepository.findById(Math.toIntExact(Long.valueOf(dto.getTransportId())))
                     .orElseThrow(() -> new RuntimeException("Transport not found"));
             reservation.setTranspId(transport);
             reservation.setTyperes(TypeReservation.TRANSPORT);

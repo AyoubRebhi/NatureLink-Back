@@ -1,7 +1,7 @@
-package com.example.naturelink.controller;
+package com.example.naturelink.Controller;
 
-import com.example.naturelink.entity.Transport;
-import com.example.naturelink.service.ITransportService;
+import com.example.naturelink.Entity.*;
+import com.example.naturelink.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.example.naturelink.repository;
+package com.example.naturelink.Repository;
+import com.example.naturelink.Entity.*;
 
-import com.example.naturelink.entity.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

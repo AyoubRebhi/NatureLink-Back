@@ -1,10 +1,9 @@
-package com.example.naturelink.repository;
+package com.example.naturelink.Repository;
 
-import com.example.naturelink.entity.Activity;
+import com.example.naturelink.Entity.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface IActivityRepository extends JpaRepository<Activity, Long> {
-    // Define custom query methods if needed
 }

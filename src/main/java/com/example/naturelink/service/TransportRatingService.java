@@ -1,9 +1,9 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
-import com.example.naturelink.entity.Transport;
-import com.example.naturelink.entity.TransportRating;
-import com.example.naturelink.repository.ITransportRating;
-import com.example.naturelink.repository.ITransportRepository;
+import com.example.naturelink.Entity.Transport;
+import com.example.naturelink.Entity.TransportRating;
+import com.example.naturelink.Repository.ITransportRating;
+import com.example.naturelink.Repository.ITransportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class TransportRatingService implements ITransportRatingService {
         Transport transport = transportRepository.findById(rating.getTransportId())
                 .orElseThrow(() -> new RuntimeException("Transport not found"));
 
-        rating.setTransport(transport);            // Set the actual transport entity
+        rating.setTransport(transport);            // Set the actual transport Entity
         rating.setTransportId(transport.getId());  // Also ensure transportId is set explicitly (optional)
 
         return transportRatingRepository.save(rating);

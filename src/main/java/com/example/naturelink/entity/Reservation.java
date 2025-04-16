@@ -1,7 +1,7 @@
-package com.example.naturelink.entity;
+package com.example.naturelink.Entity;
 
-import com.example.naturelink.entity.User;
-import com.example.naturelink.entity.*;
+import com.example.naturelink.Entity.User;
+import com.example.naturelink.Entity.*;
 
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;

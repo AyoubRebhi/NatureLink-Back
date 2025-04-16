@@ -1,6 +1,8 @@
-package com.example.naturelink.repository;
+package com.example.naturelink.Repository;
+import com.example.naturelink.Entity.*;
 
-import com.example.naturelink.entity.Restaurant;
+import com.example.naturelink.Entity.Restaurant;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

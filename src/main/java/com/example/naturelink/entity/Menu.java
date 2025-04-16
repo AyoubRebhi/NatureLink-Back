@@ -1,7 +1,7 @@
-package com.example.naturelink.entity;
+package com.example.naturelink.Entity;
 
 import jakarta.persistence.*;
-import com.example.naturelink.entity.*;
+import com.example.naturelink.Entity.*;
 
 @Entity
 @Table(name = "menu")

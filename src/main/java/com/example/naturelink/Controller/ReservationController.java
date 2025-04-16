@@ -1,8 +1,7 @@
-package com.example.naturelink.controllers;
+package com.example.naturelink.Controller;
 
 import com.example.naturelink.dto.ReservationDTO;
-import com.example.naturelink.entity.Reservation;
-import com.example.naturelink.entity.TypeReservation;
+import com.example.naturelink.Entity.*;
 import com.example.naturelink.Service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

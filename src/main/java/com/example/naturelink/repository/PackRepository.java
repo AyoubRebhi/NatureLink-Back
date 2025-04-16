@@ -1,6 +1,6 @@
-package com.example.naturelink.repository;
+package com.example.naturelink.Repository;
+import com.example.naturelink.Entity.*;
 
-import com.example.naturelink.entity.Pack;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PackRepository extends JpaRepository<Pack, Long> {

@@ -1,9 +1,9 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
-import com.example.naturelink.entity.Boutique;
-import com.example.naturelink.entity.Produit;
-import com.example.naturelink.repository.IBoutiqueRepository;
-import com.example.naturelink.repository.IProduitRepository;
+import com.example.naturelink.Entity.Boutique;
+import com.example.naturelink.Entity.Produit;
+import com.example.naturelink.Repository.IBoutiqueRepository;
+import com.example.naturelink.Repository.IProduitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +73,5 @@ public class BoutiqueService {
     }
 
 }
-
 
 

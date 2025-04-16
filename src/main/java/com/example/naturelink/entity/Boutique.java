@@ -1,4 +1,4 @@
-package com.example.naturelink.entity;
+package com.example.naturelink.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

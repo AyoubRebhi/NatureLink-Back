@@ -1,6 +1,6 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
-import com.example.naturelink.entity.Activity;
+import com.example.naturelink.Entity.Activity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,4 +13,4 @@ public interface IActivityService {
     void deleteActivity(Integer id);
     public Activity addActivityWithImages(Activity activity, List<MultipartFile> imageFiles);
 
-    }
+}

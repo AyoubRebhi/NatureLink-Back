@@ -9,8 +9,8 @@
         private List<Long> logements;
         private List<Long> restaurants;
         private List<Long> activities;
-        private List<Long> transports;
-        private List<Long> evenements;
+        private List<Integer> transports;
+        private List<Integer> evenements;
         private Long userId;
         private Long id; // <--- Make sure this is here
 
@@ -28,10 +28,10 @@
         public void setRestaurants(List<Long> restaurants) { this.restaurants = restaurants; }
         public List<Long> getActivities() { return activities; }
         public void setActivities(List<Long> activities) { this.activities = activities; }
-        public List<Long> getTransports() { return transports; }
-        public void setTransports(List<Long> transports) { this.transports = transports; }
-        public List<Long> getEvenements() { return evenements; }
-        public void setEvenements(List<Long> evenements) { this.evenements = evenements; }
+        public List<Integer> getTransports() { return transports; }
+        public void setTransports(List<Integer> transports) { this.transports = transports; }
+        public List<Integer> getEvenements() { return evenements; }
+        public void setEvenements(List<Integer> evenements) { this.evenements = evenements; }
         public Long getUserId() { return userId; }
         public void setUserId(Long userId) { this.userId = userId; }
         public Long getId() {

@@ -1,6 +1,6 @@
-package com.example.naturelink.service;
+package com.example.naturelink.Service;
 
-import com.example.naturelink.entity.Event;
+import com.example.naturelink.Entity.Event;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 

@@ -1,4 +1,4 @@
-package com.example.naturelink.entity;
+package com.example.naturelink.Entity;
 
 public enum EquipementType {
     BIEN_EQUIPEE,

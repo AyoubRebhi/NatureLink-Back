@@ -1,8 +1,7 @@
-package com.example.naturelink.controller;
+package com.example.naturelink.Controller;
 
-import com.example.naturelink.entity.Event;
-import com.example.naturelink.service.EventService;
-import com.example.naturelink.service.ExportPDFService;
+import com.example.naturelink.Entity.*;
+import com.example.naturelink.Service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;

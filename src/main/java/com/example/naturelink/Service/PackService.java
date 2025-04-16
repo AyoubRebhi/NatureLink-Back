@@ -1,8 +1,9 @@
-package com.example.naturelink.services;
+package com.example.naturelink.Service;
 
+import com.example.naturelink.Service.IPackService;
 import com.example.naturelink.dto.PackDTO;
-import com.example.naturelink.entity.*;
-import com.example.naturelink.repository.*;
+import com.example.naturelink.Entity.*;
+import com.example.naturelink.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +34,10 @@ public class PackService implements IPackService {
             dto.setUserId(Long.valueOf(pack.getUser() != null ? pack.getUser().getId() : null));
 
             dto.setLogements(pack.getLogements().stream().map(Logement::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setTransports(pack.getTransports().stream().map(Transport::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setTransports(pack.getTransports().stream().map(Transport::getId).map(Integer::valueOf).collect(Collectors.toList()));
             dto.setActivities(pack.getActivities().stream().map(Activity::getId).map(Long::valueOf).collect(Collectors.toList()));
             dto.setRestaurants(pack.getRestaurants().stream().map(Restaurant::getId).map(Long::valueOf).collect(Collectors.toList()));
-            dto.setEvenements(pack.getEvenements().stream().map(Event::getId).map(Long::valueOf).collect(Collectors.toList()));
+            dto.setEvenements(pack.getEvenements().stream().map(Event::getId).map(Integer::valueOf).collect(Collectors.toList()));
 
             return dto;
         }).collect(Collectors.toList());
