@@ -13,4 +13,4 @@ public interface IActivityService {
     void deleteActivity(Integer id);
     public Activity addActivityWithImages(Activity activity, List<MultipartFile> imageFiles);
 
-    }
+}
