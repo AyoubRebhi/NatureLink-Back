@@ -149,4 +149,8 @@ public class GroqService {
             throw new RuntimeException("Failed to parse Unsplash response", e);
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
